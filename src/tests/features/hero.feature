@@ -5,6 +5,8 @@ Feature: Verify Hero page works as expected
 
     @focus
     Scenario: Add a new hero and verify they appear in the hero list
+        When I Add a New Hero "Muscle Man"
+        Then The Hero should Appear in the Hero List
 
     Scenario: Verify searching for a hero works
 

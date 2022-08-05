@@ -1,6 +1,6 @@
 {
   "name": "emjelqplllg.angular",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@angular/animations": "^14.1.0",
@@ -22,7 +22,7 @@
     "build": "ng build",
     "test-playwright": "npx playwright test --headed",
     "test-selenium": "ts-node src/tests/selenium.spec.js",
-    "test-cucumber": "HEADLESS=false node ./node_modules/.bin/cucumber-js src/tests/features/**/*.feature --require src/tests/support/custom-world.ts --require src/tests/support/setup.ts --require src/tests/support/step-definitions/**/*.ts --require-module ts-node/register --publish-quiet",
+    "test-cucumber": "npx cucumber-js src/tests/features/**/*.feature --require src/tests/support/custom-world.ts --require src/tests/support/setup.ts --require src/tests/support/step-definitions/**/*.ts --require-module ts-node/register --publish-quiet",
     "test-cucumber:focus": "npm run test-cucumber -- --tags @focus"
   },
   "devDependencies": {
@@ -33,7 +33,7 @@
     "@playwright/test": "^1.14.1",
     "@types/node": "^18.6.2",
     "chromedriver": "103.0.0",
-    "codelyzer": "^6.0.2",
+    "codelyzer": "^0.0.28",
     "playwright": "^1.14.1",
     "ts-node": "^10.9.1",
     "tslib": "^2.4.0",
