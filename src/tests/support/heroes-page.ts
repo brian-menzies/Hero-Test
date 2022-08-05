@@ -1,9 +1,7 @@
 import { Browser, BrowserContext, Locator, Page } from 'playwright';
 
 export class HeroesPage {
-    context?: BrowserContext;
     heroesPage: Page;
-    browser?: Browser;   
     
     constructor(page: Page)
     {
@@ -17,9 +15,8 @@ export class HeroesPage {
     public get newHeroInputField() {
         return this.heroesPage.locator('id=new-hero');
     }
-
     
     public get addHeroButton() {
-        return this.heroesPage.locator('id=add-button');
+        return this.heroesPage.locator('button.add-button');
     }
 }

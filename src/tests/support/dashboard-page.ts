@@ -3,9 +3,7 @@ import { Browser, BrowserContext, Locator, Page } from 'playwright';
 import { CustomWorld } from './custom-world';
 
 export class DashboardPage {    
-    context?: BrowserContext;
     dashboardPage?: Page;
-    browser?: Browser;
 
     topHeroesText?: Locator;
     heroesMenu?: Locator;
@@ -22,5 +20,9 @@ export class DashboardPage {
         this.heroSearchTitleText = this.heroSearchContainer.locator('text=Hero Search');
         this.heroSearchBar = this.heroSearchContainer.locator('id=search-box');
         this.heroSearchResultsContainer = this.heroSearchContainer.locator('id=search-result');
+    }
+
+    public get topHeroesText() {
+        return this.dashboardPage.locator('h2', {hasText: 'My Heroes'});
     }
 }
