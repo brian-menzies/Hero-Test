@@ -4,10 +4,12 @@ import { HeroesPage } from '../heroes-page';
 import { CommonPage } from '../common-page';
 import { DashboardPage } from '../dashboard-page';
 import { expect } from '@playwright/test';
+import { HeroDetailsPage } from '../hero-details-page';
 
 let commonPage: CommonPage;
 let dashboardPage: DashboardPage;
 let heroesPage: HeroesPage;
+let heroDetailsPage: HeroDetailsPage;
 let deletedHeroName: string;
 
 Given('I am in the hero page', async function(this: CustomWorld) {
@@ -96,6 +98,22 @@ When('I Navigate to the Heroes Page', function () {
     expect(heroesPage.addHeroButton).toBeVisible();
 });
 
+When('I Navigate to the Dashboard Page', function () {
+    // Variable Declarations
+    const { page }: CustomWorld = this;
+    commonPage = new CommonPage(page!);
+
+    // Click the Heroes Link
+    commonPage.dashboardNavButton?.click();
+
+    // Ensure on Dashboard Page
+    dashboardPage = new DashboardPage(page!);
+    
+    expect(dashboardPage.topHeroesText).toBeVisible();
+    expect(dashboardPage.heroSearchContainer).toBeVisible();
+    expect(dashboardPage.heroSearchBar).toBeVisible();
+});
+
 When('I search for Hero {string}', function (heroName: string) {
     // Variable Declarations
     const { page }: CustomWorld = this;
@@ -110,6 +128,48 @@ When('I search for Hero {string}', function (heroName: string) {
     
     // Click the Hero Search Bar and Enter in Hero Name
     dashboardPage.heroSearchBar.fill(heroName);
+});
+
+When('I Select Hero {string} from the Search Results', async function (heroName: string) {
+    // Variable Declarations
+    const { page }: CustomWorld = this;
+    commonPage = new CommonPage(page!);
+
+    // Ensure on Dashboard Page
+    dashboardPage = new DashboardPage(page!);
+    
+    expect(dashboardPage.heroSearchContainer).toBeVisible();
+    expect(dashboardPage.heroSearchBar).toBeVisible();
+    
+    // Ensure Hero Search Results are Present
+    expect(dashboardPage.heroSearchResultsContainer).toBeVisible();
+
+    // Ensure Hero Name is Present in Search Resuilts List
+    // console.log(`heroName Value is: [${heroName}]`);
+    // console.log("Logging Hero Search Results");
+    // console.log("===========================");
+    let heroItems = dashboardPage.heroSearchResultsContainer.locator('li');
+
+    // console.log("heroItems are Present / Visible");
+    // console.log("Found heroItems");
+    await heroItems.nth(0).waitFor();
+
+    let liItemCounter = await heroItems.count();
+    // console.log(`liItemCounter Value is: [${liItemCounter}]`);
+
+    for (let i = 0; i < liItemCounter; i++) {
+        let currentHero = await heroItems.nth(i);
+        let currentHeroName = await currentHero.textContent();
+        console.log(`nth textContent is: [${currentHeroName}]`);
+        // console.log(`heroName Value is: [${heroName}]`);
+        if(currentHeroName!.includes(heroName))
+        {
+            console.log("currentHeroName includes heroName");
+            currentHero.click();
+            console.log("Clicked Hero Item in the Search List");
+            break;
+        }
+    }
 });
 
 Then('The Hero {string} should Appear in the Search Results List', async function (heroName: string) {
@@ -197,7 +257,6 @@ Then('I Delete a Random Hero from the List of Heroes', async function () {
     deleteButton.click();
 });
 
-
 Then('The Previously Deleted Hero should not be present in the List of Heroes', async function () {
     // Variable Declarations
     const { page }: CustomWorld = this;
@@ -249,4 +308,74 @@ Then('The Previously Deleted Hero should not be present in the List of Heroes', 
 
     expect(heroPresent).toBeFalsy();
     // console.log("heroPresent was Falsy");
+});
+
+Then('The Hero Details Page Appears', function () {
+    // Variable Declarations
+    const { page }: CustomWorld = this;
+    commonPage = new CommonPage(page!);
+
+    // Ensure on Hero Details Page
+    heroDetailsPage = new HeroDetailsPage(page!);
+    
+    expect(heroDetailsPage.heroNameDetailsText).toBeVisible();
+    expect(heroDetailsPage.heroNameInputField).toBeVisible();
+    expect(heroDetailsPage.backButton).toBeVisible();
+});
+
+Then('I Change the Hero Name to {string}', function (heroName: string) {
+    // Variable Declarations
+    const { page }: CustomWorld = this;
+    commonPage = new CommonPage(page!);
+
+    // Ensure on Hero Details Page
+    heroDetailsPage = new HeroDetailsPage(page!);
+    
+    expect(heroDetailsPage.heroNameInputField).toBeVisible();
+    expect(heroDetailsPage.saveButton).toBeVisible();
+});
+
+Then('No Results for {string} should Appear in the Search Results List', async function (heroName: string) {
+    // Variable Declarations
+    const { page }: CustomWorld = this;
+    commonPage = new CommonPage(page!);
+
+    // Ensure on Dashboard Page
+    dashboardPage = new DashboardPage(page!);
+    
+    expect(dashboardPage.heroSearchContainer).toBeVisible();
+    expect(dashboardPage.heroSearchBar).toBeVisible();
+    
+    // Ensure Hero Search Results are Present
+    expect(dashboardPage.heroSearchResultsContainer).toBeVisible();
+
+    // Ensure Hero Name is Present in Search Resuilts List
+    // console.log(`heroName Value is: [${heroName}]`);
+    // console.log("Logging Hero Search Results");
+    // console.log("===========================");
+    let heroItems = dashboardPage.heroSearchResultsContainer.locator('li');
+
+    // console.log("heroItems are Present / Visible");
+    // console.log("Found heroItems");
+    await heroItems.nth(0).waitFor(); 
+
+    let liItemCounter = await heroItems.count();    
+
+    console.log(`liItemCounter Value is: [${liItemCounter}]`);
+    // let heroPresent = false;
+
+    // for (let i = 0; i < liItemCounter; i++) {
+    //     let currentHero = await heroItems.nth(i);
+    //     let currentHeroName = await currentHero.textContent();
+    //     // console.log(`nth textContent is: [${currentHeroName}]`);
+    //     // console.log(`heroName Value is: [${heroName}]`);
+    //     if(currentHeroName!.includes(heroName))
+    //     {
+    //         // console.log("currentHeroName includes heroName");
+    //         heroPresent = true;
+    //         break;
+    //     }
+    // }
+
+    // expect(heroPresent).toBeFalsy();
 });
