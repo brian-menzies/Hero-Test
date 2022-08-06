@@ -34,17 +34,25 @@ When('I Add a New Hero {string}', async function (heroName: string) {
     expect(heroesPage.myHeroesText).toBeVisible();
     expect(heroesPage.newHeroInputField).toBeVisible();
     expect(heroesPage.addHeroButton).toBeVisible();
+
+    // console.log("Changing Hero Name");
+    const heroNameField = heroesPage.newHeroInputField;
+
+    let currentHeroName = await heroNameField.inputValue();
+    console.log(`currentHeroName2 Value is: [${currentHeroName}]`);    
     
     // Click the Add Hero Field, Enter in Name, 
     //  and Click Add Hero Button
     heroesPage.newHeroInputField.fill(heroName);
     await delay(1000);
 
-    let currentName = await heroesPage.newHeroInputField.inputValue();
-    console.log(`currentName Value is: [${currentName}]`);
+    let newHeroName = await heroNameField.inputValue();
+    console.log(`newHeroName Value is: [${newHeroName}]`);
     
-    expect(currentName === heroName).toBeTruthy();
-
+    console.log("newHeroName === heroName Validation");
+    console.log(`newHeroName Value is: [${newHeroName}]`);
+    console.log(`heroName Value is: [${heroName}]`);
+    expect(newHeroName === heroName).toBeTruthy();
     
     await delay(1000);
     heroesPage.addHeroButton.click();
