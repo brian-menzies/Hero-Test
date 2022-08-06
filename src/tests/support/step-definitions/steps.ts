@@ -426,5 +426,7 @@ Then('I Clear the Hero Search Field', async function () {
     dashboardPage.heroSearchBar.fill('');
 
     let currentSearchTerms = await dashboardPage.heroSearchBar.inputValue();
-    console.log(`currentSearchTerms Value is: [${currentSearchTerms}]`);  
+    console.log(`currentSearchTerms Value is: [${currentSearchTerms}]`);
+    
+    expect(currentSearchTerms === '').toBeTruthy();
 });
