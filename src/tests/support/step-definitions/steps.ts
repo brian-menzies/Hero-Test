@@ -128,7 +128,7 @@ When('I Navigate to the Dashboard Page', function () {
     // Ensure on Dashboard Page
     dashboardPage = new DashboardPage(page!);
     
-    console.log("Finding Dashboard Page Elements");
+    // console.log("Finding Dashboard Page Elements");
     expect(dashboardPage.topHeroesText).toBeVisible();
     expect(dashboardPage.heroSearchContainer).toBeVisible();
     expect(dashboardPage.heroSearchBar).toBeVisible();
@@ -522,29 +522,8 @@ Then('The Hero {string} should be Present in the Top Heroes Section', async func
     // console.log("Found topHeroItems");
 
     let locatorSelector = 'text=' + heroName;
-    console.log(`locatorSelector Value is: [${locatorSelector}]`);
+    // console.log(`locatorSelector Value is: [${locatorSelector}]`);
     let newHeroLink = dashboardPage.topHeroesMenu.locator(locatorSelector);
     expect(newHeroLink).toBeVisible();
-    console.log("newHeroLink was Visible");
-
-    // let liItemCounter = await topHeroItems.count();
-    // console.log(`liItemCounter Value is: [${liItemCounter}]`);
-
-    // let heroPresent = false;
-
-    // for (let i = 0; i < liItemCounter; i++) {
-    //     let currentHero = await topHeroItems.nth(i);
-    //     let currentHeroName = await currentHero.textContent();
-    //     console.log(`currentHeroName is: [${currentHeroName}]`);
-    //     // console.log(`heroName Value is: [${heroName}]`);
-    //     if(currentHeroName!.includes(heroName))
-    //     {
-    //         console.log("currentHeroName includes heroName");
-    //         heroPresent = true;
-    //         break;
-    //     }
-    // }
-
-    // expect(heroPresent === true).toBeTruthy();
-
+    // console.log("newHeroLink was Visible");
   });
