@@ -3,16 +3,16 @@ Feature: Verify Hero page works as expected
     Background:
         Given I am in the hero page
 
-    @focus
     Scenario: Add a new hero and verify they appear in the hero list
         When I Navigate to the Heroes Page
         Then I Add a New Hero "Muscle Man"
         Then The Hero "Muscle Man" should Appear in the Hero List
 
     Scenario: Verify searching for a hero works
-        When I search for Hero "Bombasto"
-        Then The Hero "Bombasto" should Appear in the Search Results List
+        When I search for Hero "Bomba"
+        Then The Hero "Magma" should Appear in the Search Results List
 
+    @focus
     Scenario: Verify deleting a hero removes them from the list
         When I Navigate to the Heroes Page
         Then I Delete a Random Hero from the List of Heroes

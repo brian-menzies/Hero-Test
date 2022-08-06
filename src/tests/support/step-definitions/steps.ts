@@ -133,7 +133,7 @@ Then('The Hero {string} should Appear in the Search Results List', async functio
 
     // console.log("heroItems are Present / Visible");
     // console.log("Found heroItems");
-    await heroItems.nth(10).waitFor(); 
+    await heroItems.nth(0).waitFor(); 
 
     let liItemCounter = await heroItems.count();    
 
@@ -143,8 +143,8 @@ Then('The Hero {string} should Appear in the Search Results List', async functio
     for (let i = 0; i < liItemCounter; i++) {
         let currentHero = await heroItems.nth(i);
         let currentHeroName = await currentHero.textContent();
-        console.log(`nth textContent is: [${currentHeroName}]`);
-        console.log(`heroName Value is: [${heroName}]`);
+        // console.log(`nth textContent is: [${currentHeroName}]`);
+        // console.log(`heroName Value is: [${heroName}]`);
         if(currentHeroName!.includes(heroName))
         {
             // console.log("currentHeroName includes heroName");
@@ -154,4 +154,20 @@ Then('The Hero {string} should Appear in the Search Results List', async functio
     }
 
     expect(heroPresent === true, "Hero Name didn't appear to be Present in the List of Heroes");
+});
+
+Then('I Delete a Random Hero from the List of Heroes', function () {
+    // Variable Declarations
+    const { page }: CustomWorld = this;
+    commonPage = new CommonPage(page!);
+
+    // Ensure on Dashboard Page
+    dashboardPage = new DashboardPage(page!);
+    
+    expect(dashboardPage.topHeroesText).toBeVisible();
+    expect(dashboardPage.heroSearchContainer).toBeVisible();
+    expect(dashboardPage.heroSearchBar).toBeVisible();
+    
+    // Click the Hero Search Bar and Enter in Hero Name
+    dashboardPage.heroSearchBar.fill(heroName);
 });
