@@ -13,14 +13,14 @@ export class HeroDetailsPage {
     }
     
     public get heroNameInputField() {
-        return this.heroDetailsPage?.locator('input');
+        return this.heroDetailsPage?.locator('id=hero-name');
     }
     
     public get backButton() {
-        return this.heroDetailsPage.locator('button', {hasText: 'go back'});
+        return this.heroDetailsPage.locator('text=go back');
     }
     
     public get saveButton() {
-        return this.heroDetailsPage.locator('button', {hasText: 'save'});
+        return this.heroDetailsPage?.locator('text=save');
     }
 }

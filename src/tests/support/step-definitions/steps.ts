@@ -109,6 +109,7 @@ When('I Navigate to the Dashboard Page', function () {
     // Ensure on Dashboard Page
     dashboardPage = new DashboardPage(page!);
     
+    console.log("Finding Dashboard Page Elements");
     expect(dashboardPage.topHeroesText).toBeVisible();
     expect(dashboardPage.heroSearchContainer).toBeVisible();
     expect(dashboardPage.heroSearchBar).toBeVisible();
@@ -334,10 +335,10 @@ Then('I Change the Hero Name to {string}', async function (heroName: string) {
 
     // Ensure on Hero Details Page
     heroDetailsPage = new HeroDetailsPage(page!);
-    
+    expect(heroDetailsPage.heroNameDetailsText).toBeVisible();
     expect(heroDetailsPage.heroNameInputField).toBeVisible();
     
-    console.log("Changing Hero Name");
+    // console.log("Changing Hero Name");
     const heroNameField = heroDetailsPage.heroNameInputField;
 
     // let currentHeroName = await heroNameField.getAttribute("ng-reflect-model");
@@ -345,20 +346,23 @@ Then('I Change the Hero Name to {string}', async function (heroName: string) {
     console.log(`currentHeroName Value is: [${currentHeroName}]`);   
 
     heroNameField.fill(heroName);    
+    let textSelector = 'text=' + heroName;
+    console.log(`textSelector Value is: [${textSelector}]`);   
+    await this.page.waitForSelector(textSelector);
 
-    // Redeclare element since it's Changed States
-    // heroDetailsPage = new HeroDetailsPage(page!);
-    // heroNameField = await heroDetailsPage.heroNameInputField;
     let newHeroName = await heroNameField.inputValue();
-
-    // let newHeroName = await heroNameField.getAttribute("ng-reflect-model");
     console.log(`newHeroName Value is: [${newHeroName}]`);
 
-    let newHeroNameTwo = await heroNameField.getAttribute('ng-reflect-model');
-    console.log(`newHeroNameTwo Value is: [${newHeroNameTwo}]`);
+    expect(currentHeroName === newHeroName).toBeFalsy();
+    
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    await delay(1000);
+    console.log("Waited 1s");
 
-
-    // expect(currentHeroName === newHeroName).toBeFalsy();
+    // Click the Save Button
+    heroDetailsPage.saveButton.click();    
+    await delay(1000);
+    console.log("Waited Another 1s");
 });
 
 Then('No Results for {string} should Appear in the Search Results List', async function (heroName: string) {
@@ -383,27 +387,11 @@ Then('No Results for {string} should Appear in the Search Results List', async f
 
     // console.log("heroItems are Present / Visible");
     // console.log("Found heroItems");
-    await heroItems.nth(0).waitFor(); 
 
-    let liItemCounter = await heroItems.count();    
-
+    let liItemCounter = await heroItems.count();
     console.log(`liItemCounter Value is: [${liItemCounter}]`);
-    // let heroPresent = false;
-
-    // for (let i = 0; i < liItemCounter; i++) {
-    //     let currentHero = await heroItems.nth(i);
-    //     let currentHeroName = await currentHero.textContent();
-    //     // console.log(`nth textContent is: [${currentHeroName}]`);
-    //     // console.log(`heroName Value is: [${heroName}]`);
-    //     if(currentHeroName!.includes(heroName))
-    //     {
-    //         // console.log("currentHeroName includes heroName");
-    //         heroPresent = true;
-    //         break;
-    //     }
-    // }
-
-    // expect(heroPresent).toBeFalsy();
+    
+    expect(liItemCounter === 0).toBeTruthy();
 });
 
 Then('I Search for Hero {string}', function (heroName: string) {
@@ -420,4 +408,23 @@ Then('I Search for Hero {string}', function (heroName: string) {
     
     // Click the Hero Search Bar and Enter in Hero Name
     dashboardPage.heroSearchBar.fill(heroName);
+});
+
+Then('I Clear the Hero Search Field', async function () {
+    // Variable Declarations
+    const { page }: CustomWorld = this;
+    commonPage = new CommonPage(page!);
+
+    // Ensure on Dashboard Page
+    dashboardPage = new DashboardPage(page!);
+    
+    expect(dashboardPage.topHeroesText).toBeVisible();
+    expect(dashboardPage.heroSearchContainer).toBeVisible();
+    expect(dashboardPage.heroSearchBar).toBeVisible();
+    
+    // Click the Hero Search Bar and Enter in Hero Name
+    dashboardPage.heroSearchBar.fill('');
+
+    let currentSearchTerms = await dashboardPage.heroSearchBar.inputValue();
+    console.log(`currentSearchTerms Value is: [${currentSearchTerms}]`);  
 });
