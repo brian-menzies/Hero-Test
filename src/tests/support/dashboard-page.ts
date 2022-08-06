@@ -14,8 +14,8 @@ export class DashboardPage {
         return this.dashboardPage.locator('h2', {hasText: 'Top Heroes'});
     }
 
-    public get heroesMenu() {
-        return this.dashboardPage.locator('id=heroes-menu');
+    public get topHeroesMenu() {
+        return this.dashboardPage.locator('div.heroes-menu');
     }
 
     public get heroSearchContainer() {
