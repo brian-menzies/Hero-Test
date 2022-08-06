@@ -8,6 +8,7 @@ import { expect } from '@playwright/test';
 let commonPage: CommonPage;
 let dashboardPage: DashboardPage;
 let heroesPage: HeroesPage;
+let deletedHeroName: string;
 
 Given('I am in the hero page', async function(this: CustomWorld) {
     const { page }: CustomWorld = this;
@@ -156,18 +157,96 @@ Then('The Hero {string} should Appear in the Search Results List', async functio
     expect(heroPresent === true, "Hero Name didn't appear to be Present in the List of Heroes");
 });
 
-Then('I Delete a Random Hero from the List of Heroes', function () {
+Then('I Delete a Random Hero from the List of Heroes', async function () {
     // Variable Declarations
     const { page }: CustomWorld = this;
     commonPage = new CommonPage(page!);
 
-    // Ensure on Dashboard Page
-    dashboardPage = new DashboardPage(page!);
+    // Ensure on Heroes Page
+    heroesPage = new HeroesPage(page!);
     
-    expect(dashboardPage.topHeroesText).toBeVisible();
-    expect(dashboardPage.heroSearchContainer).toBeVisible();
-    expect(dashboardPage.heroSearchBar).toBeVisible();
+    expect(heroesPage.myHeroesText).toBeVisible();
+    expect(heroesPage.heroesListContainer).toBeVisible();
     
-    // Click the Hero Search Bar and Enter in Hero Name
-    dashboardPage.heroSearchBar.fill(heroName);
+    // Ensure Hero List is Present and Contains Records
+    // console.log("Logging Heroes");
+    // console.log("==============");
+    let heroItems = heroesPage.heroesListContainer.locator('li');
+
+    // console.log("heroItems are Present / Visible");
+    // console.log("Found heroItems");
+    await heroItems.nth(0).waitFor(); 
+    
+    let liItemCounter = await heroItems.count();    
+
+    // console.log(`liItemCounter Value is: [${liItemCounter}]`);
+    
+    // Select Random Hero (between 0 and Max)
+    let heroDeleteIndex = Math.floor(Math.random() * (liItemCounter + 1));
+    // console.log(`heroDeleteIndex Value is: [${heroDeleteIndex}]`);
+
+    let currentHero = await heroItems.nth(heroDeleteIndex);
+    let currentHeroName = await currentHero.textContent();
+    // console.log(`nth textContent is: [${currentHeroName}]`);
+
+    deletedHeroName = currentHeroName!;
+
+    let deleteButton = currentHero.locator('button.delete');
+    // console.log("Found Delete Button");
+
+    deleteButton.click();
+});
+
+
+Then('The Previously Deleted Hero should not be present in the List of Heroes', async function () {
+    // Variable Declarations
+    const { page }: CustomWorld = this;
+    commonPage = new CommonPage(page!);
+
+    // Ensure on Heroes Page
+    heroesPage = new HeroesPage(page!);
+    
+    expect(heroesPage.myHeroesText).toBeVisible();
+    expect(heroesPage.heroesListContainer).toBeVisible();
+    
+    // Ensure Hero List is Present and Contains Records
+    // console.log("Logging Heroes");
+    // console.log("==============");
+    let heroItems = heroesPage.heroesListContainer.locator('li');
+
+    // console.log("heroItems are Present / Visible");
+    // console.log("Found heroItems");
+    // heroItems.nth(8).waitFor(); 
+    
+    let liItemCounter = await heroItems.count();    
+
+    // console.log(`liItemCounter Value is: [${liItemCounter}]`);
+    let heroPresent = false;
+
+    // console.log(`deletedHeroName Value is: [${deletedHeroName}]`);
+
+    // let currentHeroesInList = [];
+    var currentHeroesInList:Array<any>=[] 
+
+    // console.log(`liItemCounter Value is: [${liItemCounter}]`);
+
+    for (let i = 0; i < (liItemCounter - 1); i++) {
+        let currentHero = heroItems.nth(i);
+        let currentHeroName = await currentHero.textContent();
+        // console.log(`currentHeroName Value is: [${currentHeroName}]`);
+        currentHeroesInList.push(await currentHero.textContent());
+    }
+
+    if (currentHeroesInList.includes(deletedHeroName)) {
+        console.log(`⛔️ currentHeroesInList contains deletedHeroName [${deletedHeroName}]`);
+        heroPresent = true;
+      } else {
+        console.log(`✅ currentHeroesInList does NOT contain deletedHeroName [${deletedHeroName}]`);
+        heroPresent = false;
+      }
+    
+    // console.log(`heroPresent Value is: [${heroPresent}]`);
+
+    expect(heroPresent).toBeFalsy();
+    // console.log("heroPresent was Falsy");
 });

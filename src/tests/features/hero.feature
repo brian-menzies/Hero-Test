@@ -17,7 +17,7 @@ Feature: Verify Hero page works as expected
         When I Navigate to the Heroes Page
         Then I Delete a Random Hero from the List of Heroes
         Then The Previously Deleted Hero should not be present in the List of Heroes
-
+    
     Scenario: Verify a hero's name can be changed
         When I search for Hero "Magma"
         When I Select Hero "Magma" from the Search Results
