@@ -2,27 +2,35 @@ import { setWorldConstructor, World } from '@cucumber/cucumber';
 import { Browser, BrowserContext, Locator, Page } from 'playwright';
 import { CustomWorld } from './custom-world';
 
-export class DashboardPage {    
-    dashboardPage?: Page;
-
-    topHeroesText?: Locator;
-    heroesMenu?: Locator;
-    heroSearchContainer?: Locator;
-    heroSearchTitleText?: Locator;
-    heroSearchBar?: Locator;
-    heroSearchResultsContainer?: Locator;
+export class DashboardPage {
+    dashboardPage: Page;
 
     constructor(page: Page)
     {
-        this.topHeroesText = page.locator('h2', {hasText: 'Top Heroes'});
-        this.heroesMenu = page.locator('id=heroes-menu');
-        this.heroSearchContainer = page.locator('id=search-component');        
-        this.heroSearchTitleText = this.heroSearchContainer.locator('text=Hero Search');
-        this.heroSearchBar = this.heroSearchContainer.locator('id=search-box');
-        this.heroSearchResultsContainer = this.heroSearchContainer.locator('id=search-result');
+        this.dashboardPage = page;
     }
 
     public get topHeroesText() {
-        return this.dashboardPage.locator('h2', {hasText: 'My Heroes'});
+        return this.dashboardPage.locator('h2', {hasText: 'Top Heroes'});
+    }
+
+    public get heroesMenu() {
+        return this.dashboardPage.locator('id=heroes-menu');
+    }
+
+    public get heroSearchContainer() {
+        return this.dashboardPage.locator('id=search-component');
+    }
+
+    public get heroSearchTitleText() {
+        return this.heroSearchContainer?.locator('text=Hero Search');
+    }
+
+    public get heroSearchBar() {
+        return this.heroSearchContainer?.locator('id=search-box');
+    }
+
+    public get heroSearchResultsContainer() {
+        return this.heroSearchContainer?.locator('ul.search-result');
     }
 }

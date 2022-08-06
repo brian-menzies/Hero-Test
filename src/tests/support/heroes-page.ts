@@ -19,4 +19,8 @@ export class HeroesPage {
     public get addHeroButton() {
         return this.heroesPage.locator('button.add-button');
     }
+
+    public get heroesListContainer() {
+        return this.heroesPage.locator('ul.heroes');
+    }
 }
