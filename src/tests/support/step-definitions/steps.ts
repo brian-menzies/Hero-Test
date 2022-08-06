@@ -310,7 +310,7 @@ Then('The Previously Deleted Hero should not be present in the List of Heroes', 
     // console.log("heroPresent was Falsy");
 });
 
-Then('The Hero Details Page Appears', function () {
+Then('The Hero Details Page Appears', async function () {
     // Variable Declarations
     const { page }: CustomWorld = this;
     commonPage = new CommonPage(page!);
@@ -318,21 +318,47 @@ Then('The Hero Details Page Appears', function () {
     // Ensure on Hero Details Page
     heroDetailsPage = new HeroDetailsPage(page!);
     
+    // Wait for the element
+    await heroDetailsPage.heroNameInputField.waitFor();
+
+    console.log("waited for inputField");
+
     expect(heroDetailsPage.heroNameDetailsText).toBeVisible();
     expect(heroDetailsPage.heroNameInputField).toBeVisible();
     expect(heroDetailsPage.backButton).toBeVisible();
 });
 
-Then('I Change the Hero Name to {string}', function (heroName: string) {
+Then('I Change the Hero Name to {string}', async function (heroName: string) {
     // Variable Declarations
     const { page }: CustomWorld = this;
-    commonPage = new CommonPage(page!);
 
     // Ensure on Hero Details Page
     heroDetailsPage = new HeroDetailsPage(page!);
     
     expect(heroDetailsPage.heroNameInputField).toBeVisible();
-    expect(heroDetailsPage.saveButton).toBeVisible();
+    
+    console.log("Changing Hero Name");
+    const heroNameField = heroDetailsPage.heroNameInputField;
+
+    // let currentHeroName = await heroNameField.getAttribute("ng-reflect-model");
+    let currentHeroName = await heroNameField.inputValue();
+    console.log(`currentHeroName Value is: [${currentHeroName}]`);   
+
+    heroNameField.fill(heroName);    
+
+    // Redeclare element since it's Changed States
+    // heroDetailsPage = new HeroDetailsPage(page!);
+    // heroNameField = await heroDetailsPage.heroNameInputField;
+    let newHeroName = await heroNameField.inputValue();
+
+    // let newHeroName = await heroNameField.getAttribute("ng-reflect-model");
+    console.log(`newHeroName Value is: [${newHeroName}]`);
+
+    let newHeroNameTwo = await heroNameField.getAttribute('ng-reflect-model');
+    console.log(`newHeroNameTwo Value is: [${newHeroNameTwo}]`);
+
+
+    // expect(currentHeroName === newHeroName).toBeFalsy();
 });
 
 Then('No Results for {string} should Appear in the Search Results List', async function (heroName: string) {
@@ -378,4 +404,20 @@ Then('No Results for {string} should Appear in the Search Results List', async f
     // }
 
     // expect(heroPresent).toBeFalsy();
+});
+
+Then('I Search for Hero {string}', function (heroName: string) {
+    // Variable Declarations
+    const { page }: CustomWorld = this;
+    commonPage = new CommonPage(page!);
+
+    // Ensure on Dashboard Page
+    dashboardPage = new DashboardPage(page!);
+    
+    expect(dashboardPage.topHeroesText).toBeVisible();
+    expect(dashboardPage.heroSearchContainer).toBeVisible();
+    expect(dashboardPage.heroSearchBar).toBeVisible();
+    
+    // Click the Hero Search Bar and Enter in Hero Name
+    dashboardPage.heroSearchBar.fill(heroName);
 });

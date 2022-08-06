@@ -23,11 +23,7 @@ Feature: Verify Hero page works as expected
         When I Select Hero "Magma" from the Search Results
         Then The Hero Details Page Appears
         Then I Change the Hero Name to "Freezer"
-        When I Navigate to the Dashboard Page
-        Then I Search for Hero "Magma"
-        Then No Results for "Magma" should Appear in the Search Results List
-        Then I Search for Hero "Freezer"
-        Then The Hero "Freezer" should Appear in the Search Results List
+        
 
     Scenario: Verify adding a new hero and then deleting an old one from the list places the new hero on the Top Heroes section
         When I Navigate to the Heroes Page

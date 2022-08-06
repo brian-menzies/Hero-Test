@@ -13,7 +13,7 @@ export class HeroDetailsPage {
     }
     
     public get heroNameInputField() {
-        return this.heroDetailsPage?.locator('id=hero-name');
+        return this.heroDetailsPage?.locator('input');
     }
     
     public get backButton() {
