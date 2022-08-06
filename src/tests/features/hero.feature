@@ -32,5 +32,7 @@ Feature: Verify Hero page works as expected
     @focus
     Scenario: Verify adding a new hero and then deleting an old one from the list places the new hero on the Top Heroes section
         When I Navigate to the Heroes Page
-        Then I Add a New Hero "Cooler and Cell"
-        
+        When I Add a New Hero "Cooler and Cell"
+        Then I Delete a Random Here from the List of Heroes that's not "Cooler and Cell"
+        When I Navigate to the Dashboard Page
+        Then The Hero "Cooler and Cell" should be Present in the Top Heroes Section
