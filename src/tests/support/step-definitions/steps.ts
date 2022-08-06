@@ -39,7 +39,7 @@ When('I Add a New Hero {string}', async function (heroName: string) {
     const heroNameField = heroesPage.newHeroInputField;
 
     let currentHeroName = await heroNameField.inputValue();
-    console.log(`currentHeroName2 Value is: [${currentHeroName}]`);    
+    // console.log(`currentHeroName2 Value is: [${currentHeroName}]`);    
     
     // Click the Add Hero Field, Enter in Name, 
     //  and Click Add Hero Button
@@ -47,11 +47,11 @@ When('I Add a New Hero {string}', async function (heroName: string) {
     await delay(1000);
 
     let newHeroName = await heroNameField.inputValue();
-    console.log(`newHeroName Value is: [${newHeroName}]`);
+    // console.log(`newHeroName Value is: [${newHeroName}]`);
     
-    console.log("newHeroName === heroName Validation");
-    console.log(`newHeroName Value is: [${newHeroName}]`);
-    console.log(`heroName Value is: [${heroName}]`);
+    // console.log("newHeroName === heroName Validation");
+    // console.log(`newHeroName Value is: [${newHeroName}]`);
+    // console.log(`heroName Value is: [${heroName}]`);
     expect(newHeroName === heroName).toBeTruthy();
     
     await delay(1000);
@@ -92,7 +92,7 @@ When('The Hero {string} should Appear in the Hero List', async function(heroName
         // console.log(`heroName Value is: [${heroName}]`);
         if(currentHeroName!.includes(heroName))
         {
-            // console.log("currentHeroName includes heroName");
+            console.log("currentHeroName includes heroName");
             heroPresent = true;
             break;
         }
@@ -281,6 +281,7 @@ Then('I Delete a Random Here from the List of Heroes that\'s not {string}', asyn
     // Variable Declarations
     const { page }: CustomWorld = this;
     commonPage = new CommonPage(page!);
+    const delay = ms => new Promise(res => setTimeout(res, ms));
 
     // Ensure on Heroes Page
     heroesPage = new HeroesPage(page!);
@@ -305,29 +306,26 @@ Then('I Delete a Random Here from the List of Heroes that\'s not {string}', asyn
     {
         // Select Random Hero (between 0 and Max)
         let heroDeleteIndex = Math.floor(Math.random() * (liItemCounter + 1));
-        console.log(`heroDeleteIndex Value is: [${heroDeleteIndex}]`);
+        // console.log(`heroDeleteIndex Value is: [${heroDeleteIndex}]`);
 
         let currentHero = await heroItems.nth(heroDeleteIndex);
         let currentHeroName = await currentHero.textContent();
-        console.log(`currentHeroName is: [${currentHeroName}]`);
-        if(currentHeroName !== heroName)
-        {
-            console.log("currentHeroName !== heroName");
-    
-            // deletedHeroName = currentHeroName!;
+        // console.log(`currentHeroName is: [${currentHeroName}]`);
 
-            let deleteButton = currentHero.locator('button.delete');
-            console.log("Found Delete Button");
+        if(!(currentHeroName!.includes(heroName)))
+        {
+            // console.log("currentHeroName doesn't include heroName");
+            const deleteButton = currentHero.locator('.delete');
+            // console.log("Found Delete Button");
         
+            await delay(1000);
+            console.log(`Deleted Hero [${currentHeroName}]`);           
             deleteButton.click();
+            await delay(1000);
             break;
         }
     }   
   });
-
-// Then('I Delete a Random Hero from the List of Heroes that\'s not {string}', async function (heroName: string) {
-    
-// });
 
 Then('The Previously Deleted Hero should not be present in the List of Heroes', async function () {
     // Variable Declarations
@@ -519,28 +517,34 @@ Then('The Hero {string} should be Present in the Top Heroes Section', async func
     // console.log("===========================");
     let topHeroItems = dashboardPage.topHeroesMenu.locator('a');
 
-    // console.log("topHeroItems are Present / Visible");
+    // console.log("topHeroItems are Present / Visible");    
+    // topHeroItems.nth(3).waitFor();
     // console.log("Found topHeroItems");
-    // topHeroItems.nth(8).waitFor();
-    
-    let liItemCounter = await topHeroItems.count();
-    console.log(`liItemCounter Value is: [${liItemCounter}]`);
 
-    let heroPresent = false;
+    let locatorSelector = 'text=' + heroName;
+    console.log(`locatorSelector Value is: [${locatorSelector}]`);
+    let newHeroLink = dashboardPage.topHeroesMenu.locator(locatorSelector);
+    expect(newHeroLink).toBeVisible();
+    console.log("newHeroLink was Visible");
 
-    for (let i = 0; i < liItemCounter; i++) {
-        let currentHero = await topHeroItems.nth(i);
-        let currentHeroName = await currentHero.textContent();
-        console.log(`nth textContent is: [${currentHeroName}]`);
-        // console.log(`heroName Value is: [${heroName}]`);
-        if(currentHeroName!.includes(heroName))
-        {
-            // console.log("currentHeroName includes heroName");
-            heroPresent = true;
-            break;
-        }
-    }
+    // let liItemCounter = await topHeroItems.count();
+    // console.log(`liItemCounter Value is: [${liItemCounter}]`);
 
-    expect(heroPresent === true).toBeTruthy();
+    // let heroPresent = false;
+
+    // for (let i = 0; i < liItemCounter; i++) {
+    //     let currentHero = await topHeroItems.nth(i);
+    //     let currentHeroName = await currentHero.textContent();
+    //     console.log(`currentHeroName is: [${currentHeroName}]`);
+    //     // console.log(`heroName Value is: [${heroName}]`);
+    //     if(currentHeroName!.includes(heroName))
+    //     {
+    //         console.log("currentHeroName includes heroName");
+    //         heroPresent = true;
+    //         break;
+    //     }
+    // }
+
+    // expect(heroPresent === true).toBeTruthy();
 
   });
